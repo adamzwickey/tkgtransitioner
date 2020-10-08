@@ -1,4 +1,5 @@
 #! /bin/bash
+set -x #echo on
 
 # find out what status the cluster is in
 get_cluster_status(){
@@ -10,18 +11,15 @@ get_cluster_status(){
 # get tkg credentials for a cluster
 get_creds(){
     local cluster=$1
-    ###result=$(tkg get credentials $1)
     kubectl get secret $1-kubeconfig -o jsonpath='{.data.value}' | base64 -d > ./$1-kubeconfig
-    echo $result
 }
 
 # install post_creation scripts
 postcreation(){
     local cluster=$1
-    export KUBECONFIG=./$1-kubeconfig
-    sleep 60
+    sleep 5
     #run postcreation steps yaml in the child cluster
-    result=$(kubectl apply -f postcreation_steps.yaml --context=$1-admin@$1)
+    result=$(./addToArgo.sh $1 $2 $3)
     if [ $? -eq 0 ]; then
         echo "Task Succeeded"
     else
@@ -33,8 +31,8 @@ postcreation(){
         do
             echo "An error occurred. This operation will be retried when the cluster is ready"
             #wait before retrying
-            sleep 30
-            result=$(kubectl apply -f postcreation_steps.yaml --context=$1-admin@$1)
+            sleep 5
+            result=$(./addToArgo.sh $1 $2 $3)
             arr=($result)
         done
         echo $result
@@ -54,7 +52,7 @@ do
     then
         echo "Cluster has been provisioned"
         creds=$(get_creds $1)
-        postresult=$(postcreation $1)
+        postresult=$(postcreation $1 $2 $3)
         echo $postresult
         # Do Other Stuff here ######
         #
