@@ -7,6 +7,7 @@ kubectl config use-context $1-admin@$1
 kubectl create ns argocd
 kubectl create serviceaccount argocd -n argocd
 kubectl create clusterrolebinding argocd --clusterrole=cluster-admin --serviceaccount=argocd:argocd
+kubectl apply -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml  
 export TOKEN_SECRET=$(kubectl get serviceaccount -n argocd argocd -o jsonpath='{.secrets[0].name}')
 export TOKEN=$(kubectl get secret -n argocd $TOKEN_SECRET -o jsonpath='{.data.token}' | base64 --decode)
 kubectl config set-credentials $1-argocd-token-user --token $TOKEN
