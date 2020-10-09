@@ -19,3 +19,12 @@ argocd login $2 \
   --password $3 \
   --insecure  # Need this as we don't have a signed cert yet
 argocd cluster add $1-argocd-token-user@$1
+
+SERVER=$(argocd cluster list | grep $1-argocd-token-user@$1 | awk '{print $1}')
+argocd app create $1-app-of-apps \
+  --repo https://gitlab.com/azwickey/tkg-autopilot.git \
+  --dest-server $SERVER \
+  --dest-namespace default \
+  --sync-policy automated \
+  --path cd/argo/workload1 \
+  --helm-set server=$SERVER
