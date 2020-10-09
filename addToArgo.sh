@@ -1,5 +1,9 @@
 #! /bin/bash
 
+# Save Mgmt Server Url for later
+export MGMT_SERVER=$(kubectl config view | grep server | awk '{print $2}')
+echo Mgmt Server URL $MGMT_SERVER
+
 cat $1-kubeconfig
 
 export KUBECONFIG=$1-kubeconfig
@@ -24,7 +28,7 @@ SERVER=$(argocd cluster list | grep $1-argocd-token-user@$1 | awk '{print $1}')
 echo Adding to server: $SERVER
 argocd app create $1-app-of-apps \
   --repo https://gitlab.com/azwickey/tkg-autopilot.git \
-  --dest-server $SERVER \
+  --dest-server $MGMT_SERVER \
   --dest-namespace default \
   --sync-policy automated \
   --path cd/argo/workload1 \
