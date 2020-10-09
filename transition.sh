@@ -17,8 +17,8 @@ get_creds(){
 # install post_creation scripts
 postcreation(){
     local cluster=$1
-    HOST=$(kubectl get cluster aws-mgmt -o json -n tkg-system | jq '.spec.controlPlaneEndpoint.host' | tr -d '"')
-    PORT=$(kubectl get cluster aws-mgmt -o json -n tkg-system | jq '.spec.controlPlaneEndpoint.port')
+    HOST=$(kubectl get cluster $4 -o json -n tkg-system | jq '.spec.controlPlaneEndpoint.host' | tr -d '"')
+    PORT=$(kubectl get cluster $4 -o json -n tkg-system | jq '.spec.controlPlaneEndpoint.port')
     export MGMT_CLUSTER_URL=https://$HOST:$PORT
     echo Mgmt Server LB URL: $MGMT_CLUSTER_URL
     sleep 5
@@ -53,7 +53,7 @@ do
     then
         echo "Cluster has been provisioned"
         creds=$(get_creds $1)
-        postresult=$(postcreation $1 $2 $3)
+        postresult=$(postcreation $1 $2 $3 $4)
         echo $postresult
         # Do Other Stuff here ######
         #
