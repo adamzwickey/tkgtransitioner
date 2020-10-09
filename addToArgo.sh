@@ -21,6 +21,7 @@ argocd login $2 \
 argocd cluster add $1-argocd-token-user@$1
 
 SERVER=$(argocd cluster list | grep $1-argocd-token-user@$1 | awk '{print $1}')
+echo Adding to server: $SERVER
 argocd app create $1-app-of-apps \
   --repo https://gitlab.com/azwickey/tkg-autopilot.git \
   --dest-server $SERVER \
