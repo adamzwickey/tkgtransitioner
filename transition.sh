@@ -1,5 +1,5 @@
 #! /bin/bash
-set -x #echo on
+set -x 
 
 # find out what status the cluster is in
 get_cluster_status(){
@@ -17,9 +17,12 @@ get_creds(){
 # install post_creation scripts
 postcreation(){
     local cluster=$1
+    HOST=$(kubectl get cluster aws-mgmt -o json -n tkg-system | jq '.spec.controlPlaneEndpoint.host' | tr -d '"')
+    PORT=$(kubectl get cluster aws-mgmt -o json -n tkg-system | jq '.spec.controlPlaneEndpoint.port')
+    export MGMT_CLUSTER_URL=https://$HOST:$PORT
+    echo Mgmt Server LB URL: $MGMT_CLUSTER_URL
     sleep 5
-    #run postcreation steps yaml in the child cluster
-    result=$(./addToArgo.sh $1 $2 $3)
+    result=$(./addToArgo.sh $1 $2 $3 $MGMT_CLUSTER_URL)
     if [ $? -eq 0 ]; then
         echo "Task Succeeded"
     else
@@ -37,8 +40,6 @@ postcreation(){
         done
         echo $result
     fi
-    #check to make sure the command was successfully executed if not, wait and
-    #repeat
 
 }
 
