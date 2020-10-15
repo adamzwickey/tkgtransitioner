@@ -29,5 +29,5 @@ argocd app create $1-app-of-apps \
   --dest-server $4 \
   --dest-namespace default \
   --sync-policy automated \
-  --path cd/argo/workload1 \
+  --path $5 \
   --helm-set server=$SERVER

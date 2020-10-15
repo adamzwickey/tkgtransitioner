@@ -42,5 +42,6 @@ spec:
           - "argo.mgmt.tanzu.zwickey.net"
           - "topsecret"
           - "aws-mgmt"
+          - "workload1"
       restartPolicy: Never
       serviceAccountName: tkgtransitioner

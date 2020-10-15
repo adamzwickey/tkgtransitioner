@@ -22,7 +22,7 @@ postcreation(){
     export MGMT_CLUSTER_URL=https://$HOST:$PORT
     echo Mgmt Server LB URL: $MGMT_CLUSTER_URL
     sleep 5
-    result=$(./addToArgo.sh $1 $2 $3 $MGMT_CLUSTER_URL)
+    result=$(./addToArgo.sh $1 $2 $3 $MGMT_CLUSTER_URL $5)
     if [ $? -eq 0 ]; then
         echo "Task Succeeded"
     else
@@ -53,7 +53,7 @@ do
     then
         echo "Cluster has been provisioned"
         creds=$(get_creds $1)
-        postresult=$(postcreation $1 $2 $3 $4)
+        postresult=$(postcreation $1 $2 $3 $4 $5)
         echo $postresult
         # Do Other Stuff here ######
         #
