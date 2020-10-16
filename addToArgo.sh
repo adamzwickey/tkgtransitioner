@@ -31,3 +31,5 @@ argocd app create $1-app-of-apps \
   --sync-policy automated \
   --path $5 \
   --helm-set server=$SERVER
+
+echo $1-app-of-apps Created!
