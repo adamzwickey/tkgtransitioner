@@ -1,5 +1,4 @@
 #! /bin/bash
-set -x 
 
 # find out what status the cluster is in
 get_cluster_status(){
@@ -23,6 +22,7 @@ postcreation(){
     echo Mgmt Server LB URL: $MGMT_CLUSTER_URL
     sleep 5
     result=$(./addToArgo.sh $1 $2 $3 $MGMT_CLUSTER_URL $5)
+    echo Added to agro!
     if [ $? -eq 0 ]; then
         echo "Task Succeeded"
     else
