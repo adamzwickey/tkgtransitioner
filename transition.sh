@@ -1,4 +1,5 @@
 #! /bin/bash
+set -x
 
 # find out what status the cluster is in
 get_cluster_status(){
@@ -35,7 +36,27 @@ postcreation(){
             echo "An error occurred. This operation will be retried when the cluster is ready"
             #wait before retrying
             sleep 5
-            result=$(./addToArgo.sh $1 $2 $3)
+            result=$(./addToArgo.sh $1 $2 $3 $MGMT_CLUSTER_URL $5)
+            arr=($result)
+        done
+        echo $result
+    fi
+    
+    result=$(./addToTMC.sh $1)
+    echo Added to TMC!
+    if [ $? -eq 0 ]; then
+        echo "Task Succeeded"
+    else
+        echo "FAIL"
+        arr=($result)
+        echo "Writing arguments"
+        echo ${arr[0]}
+        until [[ ${arr[0]} != Error ]]
+        do
+            echo "An error occurred. This operation will be retried when the cluster is ready"
+            #wait before retrying
+            sleep 5
+            result=$(./addToTMC.sh $1)
             arr=($result)
         done
         echo $result

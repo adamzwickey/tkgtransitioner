@@ -43,5 +43,10 @@ spec:
           - "topsecret"
           - "aws-mgmt"
           - "workload1"
+        env:
+            - name: TMC_API_TOKEN
+              value: asdasdas
+            - name: TMC_GROUP
+              value: demo
       restartPolicy: Never
       serviceAccountName: tkgtransitioner
